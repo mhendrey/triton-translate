@@ -106,7 +106,7 @@ class TritonPythonModel:
             ## tgt_lang, planning for adding NLLB which has different codes
             if requests_data[batch_id]["translation_model"] == "seamlessm4t_text2text":
                 default_tgt_lang = "eng"
-            elif requests_data[batch_id]["translation_model"] == "nllb":
+            elif requests_data[batch_id]["translation_model"] == "nllb_200_distilled_600M":
                 default_tgt_lang = "eng_Latn"
             requests_data[batch_id]["tgt_lang"] = request_params.get(
                 "tgt_lang", default_tgt_lang
@@ -156,7 +156,7 @@ class TritonPythonModel:
                 outputs_tt.append(output_tt)
             return outputs_tt
 
-    def seamless_fix_chinese(self, src_lang_tt, src_script_tt):
+    def get_seamless_src_lang(self, src_lang_tt, src_script_tt):
         src_lang = src_lang_tt.as_numpy().reshape(-1)[0].decode("utf-8")
         if src_script_tt is not None:
             src_script = src_script_tt.as_numpy().reshape(-1)[0].decode("utf-8")
@@ -172,6 +172,19 @@ class TritonPythonModel:
             )
         else:
             return src_lang_tt
+    
+    def get_nllb_src_lang(self, src_lang_tt, src_script_tt):
+        src_lang = src_lang_tt.as_numpy().reshape(-1)[0].decode("utf-8")
+        self.logger.log_info(f"{type(src_script_tt)}")
+        if src_script_tt is not None:
+            src_script = src_script_tt.as_numpy().reshape(-1)[0].decode("utf-8")
+            self.logger.log_info(f"{src_script=}")
+            src_lang = f"{src_lang}_{src_script}"
+
+        return pb_utils.Tensor(
+            "SRC_LANG", np.array([src_lang], dtype=np.object_).reshape(-1, 1)
+        )
+            
 
     def error_response(self, batch_id: int, error_msg: str):
         response = pb_utils.InferenceResponse(error=pb_utils.TritonError(error_msg))
@@ -379,7 +392,14 @@ class TritonPythonModel:
                         requests_data[batch_id]["translation_model"]
                         == "seamlessm4t_text2text"
                     ):
-                        src_lang_tt = self.seamless_fix_chinese(
+                        src_lang_tt = self.get_seamless_src_lang(
+                            src_lang_tt, src_script_tt
+                        )
+                    elif (
+                        requests_data[batch_id]["translation_model"]
+                        == "nllb_200_distilled_600M"
+                    ):
+                        src_lang_tt = self.get_nllb_src_lang(
                             src_lang_tt, src_script_tt
                         )
                     tgt_lang_tt = pb_utils.Tensor(
@@ -411,11 +431,20 @@ class TritonPythonModel:
                     + "on sentences",
                 )
                 sentence_tt = translate_inputs[batch_id][chunk_id]["input_text_tt"]
+
                 if (
                     requests_data[batch_id]["translation_model"]
                     == "seamlessm4t_text2text"
                 ):
-                    src_lang_tt = self.seamless_fix_chinese(src_lang_tt, src_script_tt)
+                    src_lang_tt = self.get_seamless_src_lang(src_lang_tt, src_script_tt)
+                elif (
+                    requests_data[batch_id]["translation_model"]
+                    == "nllb"
+                ):
+                    src_lang_tt = self.get_nllb_src_lang(
+                        src_lang_tt, src_script_tt
+                    )
+
                 tgt_lang_tt = pb_utils.Tensor(
                     "TGT_LANG",
                     np.array(

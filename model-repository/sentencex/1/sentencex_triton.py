@@ -64,6 +64,7 @@ class TritonPythonModel:
             # TYPE_STRING is bytes when sending a request. Decode to get str
             input_text = input_text_tt.as_numpy().reshape(-1)[0].decode("utf-8")
             lang_id = lang_id_tt.as_numpy().reshape(-1)[0].decode("utf-8")
+            lang_id = lang_id.split("_")[0]  # Remove script from lang_id if present
 
             # In sentencex.segment(lang_id, text), lang_id: str, language identifier in
             # ISO 639-1 format. fastText gives ISO 639-3. So try to convert from 3 -> 1
