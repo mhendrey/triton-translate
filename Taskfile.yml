@@ -1,0 +1,86 @@
+version: '3'
+
+dontenv: ['task.env']
+
+vars:
+  COMPUTE_TYPE: '{{default "gpu" .COMPUTE_TYPE}}'
+
+tasks:
+  clean:
+    cmds:
+      - docker system prune -f --volumes
+
+  triton-start:
+    #TODO: define all the conda build envs and triton-import pulling in models 
+    #deps: [build-execution-env-all, model-import]
+    cmds:
+      - docker compose -f docker-compose.yml --profile {{.COMPUTE_TYPE}} up -d
+    preconditions:
+      - test -f ./model-repository/fasttext_language_identification/fasttext_language_identification.tar.gz
+      - test -f ./model-repository/nllb_200_distilled_600M/nllb_200_distilled_600M.tar.gz
+      - test -f ./model-repository/seamlessm4t_text2text/seamlessm4t_text2text.tar.gz
+      - test -f ./model-repository/sentencex/sentencex.tar.gz
+
+
+  triton-stop:
+    cmds:
+      - docker compose -f docker-compose.yml --profile {{.COMPUTE_TYPE}} down 
+
+  triton-infer:
+    desc: "This task is not yet implemented"
+    cmds:
+      - println "Task 'my-task' is not yet implemented." 
+
+  model-import:
+    desc: "Task to import model files from upstream model store"
+    cmds:
+      - mkdir -p models
+      - huggingface-cli download facebook/fasttext-language-identification --cache-dir models
+      - huggingface-cli download facebook/seamless-m4t-v2-large --cache-dir models
+      - huggingface-cli download facebook/nllb-200-distilled-600M --cache-dir models
+
+  build-execution-env-all:
+    desc: "Tasks to build all execution environments"
+    deps: [
+      build-fasttext_language_identification-env,
+      build-nllb_200_distilled_600M-env,
+      build-seamlessm4t_text2text-env,
+      build-sentencex-env,
+    ]
+
+  build-*-env:
+    vars:
+      MODEL: '{{index .MATCH 0}}'
+    label: 'build-{{.MODEL}}-env'  
+    cmds:
+      - task: build-execution-env-internal
+        vars:     
+          CONDA_ENV_NAME: '{{.MODEL}}'
+          CONDA_ENV_FILE_PATH: '/model-repository/{{.MODEL}}/environment.yml'
+          CONDA_PACKED_OUTPUT_FILE_PATH: '/model-repository/{{.MODEL}}/{{.MODEL}}.tar.gz'
+    preconditions:
+      - test -d "./model-repository/{{.MODEL}}"     
+
+  build-execution-env-internal:
+    internal: true
+    cmds:
+      - >
+        rm -f .{{.CONDA_PACKED_OUTPUT_FILE_PATH}} && 
+        printf "Building conda pack file {{.CONDA_PACKED_OUTPUT_FILE_PATH}} for {{.CONDA_ENV_NAME}} using {{.CONDA_ENV_FILE_PATH}}\n\n" && 
+        docker compose -f docker-compose.yml run 
+        --rm 
+        --no-deps 
+        --interactive=false 
+        --env CONDA_ENV_NAME={{.CONDA_ENV_NAME}} 
+        --env CONDA_ENV_FILE_PATH={{.CONDA_ENV_FILE_PATH}} 
+        --env CONDA_PACKED_OUTPUT_FILE_PATH={{.CONDA_PACKED_OUTPUT_FILE_PATH}} 
+        conda-pack-builder
+    sources:
+      - '.{{.CONDA_ENV_FILE_PATH}}'
+    generates:
+      - '.{{.CONDA_PACKED_OUTPUT_FILE_PATH}}'
+
+  build-conda-packer:
+    cmds:
+      - docker compose -f docker-compose.yml --profile build build
+      
