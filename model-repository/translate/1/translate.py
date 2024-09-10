@@ -101,6 +101,16 @@ class TritonPythonModel:
             requests_data[batch_id]["translation_model"] = request_params.get(
                 "translation_model", self.default_translation_model
             )
+            translation_model = request_params.get("translation_model", None)
+            if translation_model is None:
+                requests_data[batch_id]["translation_model"] = self.default_translation_model
+            elif translation_model.lower() == "seamlessm4t":
+                requests_data[batch_id]["translation_model"] = "seamlessm4t_text2text"
+            elif translation_model.lower() == "nllb":
+                requests_data[batch_id]["translation_model"] = "nllb_200_distilled_600M"
+            else:
+                self.error_response(batch_id, f"Invalid translation model: {translation_model}")
+                return None
             ## src_lang
             requests_data[batch_id]["src_lang"] = request_params.get("src_lang", None)
             ## tgt_lang, planning for adding NLLB which has different codes
@@ -115,6 +125,7 @@ class TritonPythonModel:
             requests_data[batch_id]["language_id_threshold"] = request_params.get(
                 "language_id_threshold", self.default_language_id_threshold
             )
+            self.logger.log_info(f"{requests_data[batch_id]=}")
 
         return None
 
@@ -175,10 +186,8 @@ class TritonPythonModel:
     
     def get_nllb_src_lang(self, src_lang_tt, src_script_tt):
         src_lang = src_lang_tt.as_numpy().reshape(-1)[0].decode("utf-8")
-        self.logger.log_info(f"{type(src_script_tt)}")
         if src_script_tt is not None:
             src_script = src_script_tt.as_numpy().reshape(-1)[0].decode("utf-8")
-            self.logger.log_info(f"{src_script=}")
             src_lang = f"{src_lang}_{src_script}"
 
         return pb_utils.Tensor(
