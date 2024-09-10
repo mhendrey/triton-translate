@@ -218,30 +218,30 @@ top predicted language is less than the `language_id_threhold` (0.30), then each
 sentence in the segmenter is sent for language detection before being translated.
 
 The validation is run over a total of 96 languages. The results for each language are
-listed below:
+listed below.
 
-### Results
-| Language | chrF2++ w/ src_lang | chrF2++ no src_lang |
-| :------: | :-----------------: | :-----------------: |
-| afr | 67.7 | 67.7 | 
-| amh | 64.0 | 64.0 | 
-| arb | 68.6 | 68.6 | 
-| ary | 59.9 | 58.6 | 
-| arz | 64.1 | 63.2 | 
-| asm | 61.2 | 61.2 | 
-| azj | 60.0 | 60.0 | 
-| bel | 59.9 | 59.9 | 
-| ben | 65.1 | 65.2 | 
-| bos | 70.7 | 70.7 | 
-| bul | 70.4 | 70.4 | 
-| cat | 72.6 | 72.6 | 
-| ceb | 69.7 | 69.6 | 
+
+| Language | SeamlessM4T chrF2++ w/ src_lang | SeamlessM4T chrF2++ no src_lang |
+| :------: | :-----------------------------: | :-----------------------------: |
+| afr | 67.7 | 67.7 |
+| amh | 64.0 | 64.0 |
+| arb | 68.6 | 68.6 |
+| ary | 59.8 | 58.6 |
+| arz | 64.2 | 63.2 |
+| asm | 61.2 | 61.2 |
+| azj | 60.0 | 60.0 |
+| bel | 59.9 | 59.9 |
+| ben | 65.2 | 65.2 |
+| bos | 70.7 | 70.7 |
+| bul | 70.4 | 70.4 |
+| cat | 72.6 | 72.6 |
+| ceb | 69.6 | 69.6 |
 | ces | 68.8 | 68.8 |
 | ckb | 61.5 | 61.5 |
 | cmn | 62.4 | 61.8 |
-| cmn_Hant | 60.6 | 55.9 |
+| cmn_Hant | 60.6 | 55.8 |
 | cym | 74.7 | 74.7 |
-| dan | 72.5 | 72.6 |
+| dan | 72.6 | 72.6 |
 | deu | 71.7 | 71.7 |
 | ell | 66.3 | 66.3 |
 | est | 65.6 | 65.6 |
@@ -253,31 +253,31 @@ listed below:
 | gle | 65.5 | 65.5 |
 | glg | 70.8 | 70.8 |
 | guj | 68.6 | 68.6 |
-| heb | 68.7 | 68.8 |
+| heb | 68.8 | 68.7 |
 | hin | 67.6 | 67.6 |
-| hrv | 67.4 | 67.3 |
+| hrv | 67.4 | 67.4 |
 | hun | 66.1 | 66.1 |
 | hye | 68.2 | 68.2 |
 | ibo | 60.3 | 60.3 |
-| ind | 68.7 | 68.6 |
+| ind | 68.6 | 68.7 |
 | isl | 61.6 | 61.6 |
 | ita | 66.3 | 66.3 |
 | jav | 66.8 | 66.8 |
 | jpn | 54.1 | 54.1 |
-| kan | 64.7 | 64.8 |
+| kan | 64.7 | 64.7 |
 | kat | 62.3 | 62.3 |
 | kaz | 64.4 | 64.4 |
-| khk | 60.3 | 60.3 |
-| **khm** | 10.0 | 10.0 |
+| khk | 60.4 | 60.3 |
+| khm | 10.0 | 10.1 |
 | kir | 58.8 | 58.8 |
 | kor | 59.9 | 59.9 |
 | lao | 64.9 | 64.9 |
 | lit | 63.5 | 63.5 |
-| lug | 52.7 | 52.7 |
+| lug | 52.8 | 52.7 |
 | luo | 55.6 | 55.6 |
-| lvs | 64.0 | 64.0 |
+| lvs | 63.9 | 63.9 |
 | mai | 69.7 | 69.7 |
-| mal | 65.8 | 65.7 |
+| mal | 65.7 | 65.7 |
 | mar | 66.9 | 66.9 |
 | mkd | 70.9 | 70.9 |
 | mlt | 75.4 | 75.4 |
@@ -286,12 +286,12 @@ listed below:
 | nld | 64.3 | 64.3 |
 | nno | 70.9 | 70.9 |
 | nob | 70.5 | 70.5 |
-| npi | 68.3 | 68.3 |
+| npi | 68.2 | 68.3 |
 | nya | 58.4 | 58.4 |
-| ory | 66.6 | 66.7 |
-| pan | 56.4 | 56.4 |
+| ory | 66.7 | 66.7 |
+| pan | 56.5 | 56.4 |
 | pbt | 61.6 | 61.6 |
-| pes | 66.8 | 66.7 |
+| pes | 66.7 | 66.7 |
 | pol | 63.1 | 63.1 |
 | por | 74.0 | 74.0 |
 | ron | 70.7 | 70.7 |
@@ -305,12 +305,12 @@ listed below:
 | spa | 64.8 | 64.8 |
 | srp | 70.9 | 70.9 |
 | swe | 72.6 | 72.6 |
-| swh | 66.4 | 66.4 |
-| tam | 62.9 | 62.9 |
+| swh | 66.5 | 66.4 |
+| tam | 62.9 | 63.0 |
 | tel | 67.0 | 67.0 |
 | tgk | 63.7 | 63.7 |
-| tgl | 69.6 | 69.6 |
-| **tha** | 15.4 | 15.5 |
+| tgl | 69.6 | 69.7 |
+| tha | 15.5 | 15.4 |
 | tur | 66.8 | 66.8 |
 | ukr | 67.9 | 67.9 |
 | urd | 63.9 | 63.9 |
@@ -318,8 +318,113 @@ listed below:
 | vie | 64.5 | 64.5 |
 | yor | 51.0 | 51.0 |
 | yue | 57.6 | 57.6 |
-| zul | 66.5 | 66.5 |
-| **Mean** | **63.47** | **63.39** |
+| zul | 66.4 | 66.5 |
+| **Mean** | **63.47** | **63.40** |
+
+Time taken: 2:43:59.628589
+
+| Language | NLLB chrF2++ w/ src_lang | NLLB chrF2++ no src_lang |
+| :------: | :----------------------: | :----------------------: |
+| afr_Latn | 68.9 | 68.9 |
+| amh_Ethi | 59.6 | 59.6 |
+| arb_Arab | 66.3 | 66.3 |
+| ary_Arab | 57.8 | 56.1 |
+| arz_Arab | 62.0 | 60.9 |
+| asm_Beng | 58.8 | 58.8 |
+| azj_Latn | 58.7 | 58.7 |
+| bel_Cyrl | 57.8 | 57.8 |
+| ben_Beng | 63.2 | 63.2 |
+| bos_Latn | 68.3 | 68.1 |
+| bul_Cyrl | 68.1 | 68.1 |
+| cat_Latn | 71.2 | 71.2 |
+| ceb_Latn | 67.4 | 67.4 |
+| ces_Latn | 66.7 | 66.7 |
+| ckb_Arab | 60.5 | 60.5 |
+| cym_Latn | 71.4 | 71.4 |
+| dan_Latn | 71.4 | 71.4 |
+| deu_Latn | 69.6 | 69.6 |
+| ell_Grek | 64.8 | 64.8 |
+| est_Latn | 63.7 | 63.7 |
+| eus_Latn | 62.1 | 62.1 |
+| fin_Latn | 62.1 | 62.1 |
+| fra_Latn | 70.0 | 70.0 |
+| fuv_Latn | 43.1 | 43.2 |
+| gaz_Latn | 52.9 | 52.9 |
+| gle_Latn | 63.4 | 63.5 |
+| glg_Latn | 69.1 | 69.1 |
+| guj_Gujr | 66.9 | 66.9 |
+| heb_Hebr | 66.6 | 66.6 |
+| hin_Deva | 67.0 | 67.0 |
+| hrv_Latn | 65.0 | 65.0 |
+| hun_Latn | 63.7 | 63.7 |
+| hye_Armn | 65.1 | 65.1 |
+| ibo_Latn | 56.5 | 56.5 |
+| ind_Latn | 68.2 | 68.2 |
+| isl_Latn | 58.5 | 58.5 |
+| ita_Latn | 65.5 | 65.5 |
+| jav_Latn | 65.3 | 65.3 |
+| jpn_Jpan | 57.8 | 57.8 |
+| kan_Knda | 62.6 | 62.6 |
+| kat_Geor | 59.4 | 59.4 |
+| kaz_Cyrl | 61.9 | 61.9 |
+| khk_Cyrl | 56.2 | 56.3 |
+| khm_Khmr | 24.7 | 24.8 |
+| kir_Cyrl | 56.0 | 56.0 |
+| kor_Hang | 59.0 | 59.0 |
+| lao_Laoo | 62.2 | 62.2 |
+| lit_Latn | 61.4 | 61.4 |
+| lug_Latn | 50.6 | 50.6 |
+| luo_Latn | 51.5 | 51.5 |
+| lvs_Latn | 61.6 | 61.5 |
+| mai_Deva | 67.2 | 67.2 |
+| mal_Mlym | 64.1 | 64.2 |
+| mar_Deva | 63.8 | 63.8 |
+| mkd_Cyrl | 68.5 | 68.6 |
+| mlt_Latn | 74.3 | 74.3 |
+| mni_Beng | 56.4 | 56.4 |
+| mya_Mymr | 54.6 | 54.6 |
+| nld_Latn | 63.2 | 63.2 |
+| nno_Latn | 68.3 | 68.3 |
+| nob_Latn | 67.5 | 67.5 |
+| npi_Deva | 65.6 | 65.6 |
+| nya_Latn | 56.0 | 56.0 |
+| ory_Orya | 63.6 | 63.7 |
+| pan_Guru | 58.1 | 58.1 |
+| pbt_Arab | 59.5 | 59.5 |
+| pes_Arab | 64.4 | 64.4 |
+| pol_Latn | 61.5 | 61.5 |
+| por_Latn | 73.3 | 73.3 |
+| ron_Latn | 70.6 | 70.5 |
+| rus_Cyrl | 64.8 | 64.8 |
+| slk_Latn | 66.7 | 66.7 |
+| slv_Latn | 63.1 | 63.1 |
+| sna_Latn | 56.0 | 56.0 |
+| snd_Arab | 64.7 | 64.7 |
+| som_Latn | 56.5 | 56.5 |
+| spa_Latn | 64.2 | 64.2 |
+| srp_Cyrl | 68.1 | 68.1 |
+| swe_Latn | 70.6 | 70.6 |
+| swh_Latn | 65.1 | 65.1 |
+| tam_Taml | 61.5 | 61.5 |
+| tel_Telu | 65.5 | 65.5 |
+| tgk_Cyrl | 61.2 | 61.2 |
+| tgl_Latn | 68.4 | 68.4 |
+| tha_Thai | 27.9 | 28.0 |
+| tur_Latn | 65.5 | 65.5 |
+| ukr_Cyrl | 66.5 | 66.5 |
+| urd_Arab | 62.4 | 62.4 |
+| uzn_Latn | 62.3 | 62.3 |
+| vie_Latn | 64.0 | 64.0 |
+| yor_Latn | 49.1 | 49.1 |
+| yue_Hant | 58.1 | 58.1 |
+| zho_Hans | 59.4 | 59.2 |
+| zho_Hant | 56.0 | 56.9 |
+| zsm_Latn | 69.1 | 69.1 |
+| zul_Latn | 63.3 | 63.3 |
+| **Mean** | **62.22** | **62.20** |
+
+Time taken: 0:48:05.420295
+
 
 
 Comparing against the single sentence translation, we find that we generally get
