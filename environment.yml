@@ -1,4 +1,4 @@
-name: triton-prongs-development-env
+name: triton-translate-development-env
 channels:
   - defaults
   - conda-forge

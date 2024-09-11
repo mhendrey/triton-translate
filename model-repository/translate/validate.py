@@ -251,13 +251,15 @@ def main():
                 tgt = "eng_Latn"
                 translation_model = "nllb"
             print(f"| {src} ", end="", flush=True)
-            for use_src in enumerate([True, False]):
+            for use_src in [True, False]:
                 try:
                     triton_score, errors_dict = test_pair(
                         src, tgt, use_src=use_src, translation_model=translation_model
                     )
                 except Exception as exc:
                     errors_lang.append(f"{src} threw {exc}\n")
+                    chrf2_lang.append(np.nan)
+                    print(f"| - ", end="", flush=True)
                 else:
                     print(f"| {triton_score:.1f} ", end="", flush=True)
                     chrf2_lang.append(triton_score)
@@ -266,7 +268,7 @@ def main():
         errors[language_code] = errors_lang
         chrf2.append(chrf2_lang)
 
-    chrf2_mean = np.array(chrf2).mean(axis=0)
+    chrf2_mean = np.nanmean(np.array(chrf2), axis=0)
     print(f"| **Mean** | **{chrf2_mean[0]:.2f}** | **{chrf2_mean[1]:.2f}** ", end="")
     print(f"| | **{chrf2_mean[2]:.2f}** | **{chrf2_mean[3]:.2f}** |")
 
