@@ -1,17 +1,30 @@
 name: triton-translate-development-env
 channels:
-  - defaults
+  - pytorch
+  - nvidia
   - conda-forge
- dependencies:
-   - python=3.10
-   - ipython
-   - jupyter
-   - tritonclient
-   - tritonclient-http
-   - tritonclient-grpc
-   - isort
-   - black
-   - autoflake
-   - pip
-   #- pip:
-     # pip deps
+  - defaults
+dependencies:
+  - python ==3.12.5
+  - ipython
+  - numpy ==1.26.4
+  - protobuf
+  - pytorch ==2.3.1
+  - pytorch-cuda ==12.1
+  - torchaudio ==2.3.1
+  - transformers ==4.42.4
+  - accelerate ==0.32.1
+  - sentencepiece ==0.2.0
+  - scikit-learn
+  - fasttext ==0.9.2
+  - huggingface_hub ==0.24.6
+  - datasets
+  - sacrebleu
+  - requests
+  - ruff
+  - isort
+  - black
+  - autoflake
+  - pip
+  - pip:
+    - sentencex ==0.6.1
