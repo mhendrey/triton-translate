@@ -167,32 +167,45 @@ class TritonPythonModel:
                 outputs_tt.append(output_tt)
             return outputs_tt
 
-    def get_seamless_src_lang(self, src_lang_tt, src_script_tt):
+    def get_src_lang(self, src_lang_tt, src_script_tt, translation_model:str):
+        """Get source language tensor formatted accordingly to the translation model
+        requirements
+        
+        Parameters
+        ----------
+        src_lang_tt: pb_utils.Tensor
+            Tensor containing the source language code
+        src_script_tt: pb_utils.Tensor
+            Tensor containing the script code, if available
+        translation_model: str
+            Name of the translation model being used
+        
+        Returns
+        -------
+        pb_utils.Tensor
+            Properly formatted source language tensor for the specified model
+        """
         src_lang = src_lang_tt.as_numpy().reshape(-1)[0].decode("utf-8")
+        
         if src_script_tt is not None:
             src_script = src_script_tt.as_numpy().reshape(-1)[0].decode("utf-8")
         else:
             src_script = ""
-        if src_lang == "zho":
-            if src_script == "Hant":
-                src_lang = "cmn_Hant"
-            else:
-                src_lang = "cmn"
+        
+        if translation_model == "seamlessm4t_text2text":
+            if src_lang == "zho":
+                src_lang = "cmn_Hant" if src_script == "Hant" else "cmn"
             return pb_utils.Tensor(
                 "SRC_LANG", np.array([src_lang], dtype=np.object_).reshape(-1, 1)
             )
+        elif translation_model == "nllb_200_distilled_600M":
+            if src_script:
+                src_lang = f"{src_lang}_{src_script}"
+            return pb_utils.Tensor(
+                "SRC_LANG", np.array([src_lang], dtype=np.object_).reshape(-1,1)
+            )
         else:
             return src_lang_tt
-    
-    def get_nllb_src_lang(self, src_lang_tt, src_script_tt):
-        src_lang = src_lang_tt.as_numpy().reshape(-1)[0].decode("utf-8")
-        if src_script_tt is not None:
-            src_script = src_script_tt.as_numpy().reshape(-1)[0].decode("utf-8")
-            src_lang = f"{src_lang}_{src_script}"
-
-        return pb_utils.Tensor(
-            "SRC_LANG", np.array([src_lang], dtype=np.object_).reshape(-1, 1)
-        )
             
 
     def error_response(self, batch_id: int, error_msg: str):
@@ -395,22 +408,11 @@ class TritonPythonModel:
                 # Submit these for translation
                 for chunk_id in translate_inputs[batch_id]:
                     sentence_tt = translate_inputs[batch_id][chunk_id]["input_text_tt"]
-                    src_lang_tt = src_lang_doc_tts[batch_id]
-                    src_script_tt = src_script_doc_tts[batch_id]
-                    if (
+                    src_lang_tt = self.get_src_lang(
+                        src_lang_doc_tts[batch_id],
+                        src_script_doc_tts[batch_id],
                         requests_data[batch_id]["translation_model"]
-                        == "seamlessm4t_text2text"
-                    ):
-                        src_lang_tt = self.get_seamless_src_lang(
-                            src_lang_tt, src_script_tt
-                        )
-                    elif (
-                        requests_data[batch_id]["translation_model"]
-                        == "nllb_200_distilled_600M"
-                    ):
-                        src_lang_tt = self.get_nllb_src_lang(
-                            src_lang_tt, src_script_tt
-                        )
+                    )
                     tgt_lang_tt = pb_utils.Tensor(
                         "TGT_LANG",
                         np.array(
@@ -440,20 +442,11 @@ class TritonPythonModel:
                     + "on sentences",
                 )
                 sentence_tt = translate_inputs[batch_id][chunk_id]["input_text_tt"]
-
-                if (
-                    requests_data[batch_id]["translation_model"]
-                    == "seamlessm4t_text2text"
-                ):
-                    src_lang_tt = self.get_seamless_src_lang(src_lang_tt, src_script_tt)
-                elif (
-                    requests_data[batch_id]["translation_model"]
-                    == "nllb"
-                ):
-                    src_lang_tt = self.get_nllb_src_lang(
-                        src_lang_tt, src_script_tt
-                    )
-
+                src_lang_tt = self.get_src_lang(
+                    src_lang_tt,
+                    src_script_tt,
+                    requests_data[batch_id]["translation_model"],
+                )
                 tgt_lang_tt = pb_utils.Tensor(
                     "TGT_LANG",
                     np.array(
